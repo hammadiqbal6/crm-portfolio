@@ -147,6 +147,20 @@ export default {
       stack: ['SuiteCRM 7.14', 'PHP', 'Stripe', 'MySQL', 'GitLab CI'],
     },
     {
+      title: 'SuiteCRM V8 API production validation',
+      context: 'SuiteCRM client · Sep 2026',
+      category: 'SuiteCRM',
+      verified: 'Email report',
+      summary: '6/6 checks passed on production and 6/6 on staging, with a clean leave-behind: no business records were edited.',
+      points: [
+        'Authenticated and read a single Lead through the V8 API',
+        'Created a TEST Note and updated only its description',
+        'Added a reversible Contact relationship, then reversed it with an authoritative readback',
+        'Ran within the authorised window; production left operational',
+      ],
+      stack: ['SuiteCRM', 'API v8', 'REST'],
+    },
+    {
       title: 'Field-level access control plugin',
       context: 'SuiteCRM client',
       category: 'SuiteCRM',

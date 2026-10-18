@@ -288,7 +288,14 @@ function ProjectCard({ p }) {
           </span>
         )}
       </div>
-      <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-white">{p.title}</h3>
+      {p.verified && (
+        <p className="mt-4">
+          <span className="chip gap-1 !border-emerald-500/30 !bg-emerald-500/10 !text-emerald-800 dark:!text-emerald-300" title="Figures confirmed in a written report">
+            <span aria-hidden="true">✓</span> Verified ({p.verified.toLowerCase()})
+          </span>
+        </p>
+      )}
+      <h3 className={`${p.verified ? 'mt-3' : 'mt-4'} text-lg font-semibold text-slate-900 dark:text-white`}>{p.title}</h3>
       {p.context && <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{p.context}</p>}
       <p className="mt-3 text-slate-600 dark:text-slate-300">{p.summary}</p>
       {p.points && open && (
