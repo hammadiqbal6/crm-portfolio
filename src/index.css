@@ -6,7 +6,7 @@
   html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
-    *, *::before, *::after { animation: none !important; transition: none !important; }
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
   }
   :focus-visible { outline: 2px solid rgb(var(--brand-500)); outline-offset: 3px; border-radius: 6px; }
 }
@@ -19,7 +19,7 @@
   .card { @apply rounded-2xl border border-slate-200/80 bg-white/70 shadow-sm backdrop-blur transition dark:border-white/10 dark:bg-white/[0.03]; }
   .chip { @apply inline-flex items-center rounded-full border border-slate-200 bg-slate-50 px-2.5 py-0.5 font-mono text-[11px] text-slate-600 dark:border-white/10 dark:bg-white/5 dark:text-slate-300; }
   .btn { @apply inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0b1020]; }
-  .btn-primary { @apply btn bg-brand-600 text-white shadow-lg shadow-brand-600/25 hover:bg-brand-700; }
+  .btn-primary { @apply btn bg-[#0f766e] text-white shadow-lg shadow-brand-700/25 hover:bg-brand-900; }
   .btn-ghost { @apply btn border border-slate-300 text-slate-700 hover:border-brand-500 hover:text-brand-700 dark:border-white/15 dark:text-slate-200 dark:hover:text-brand-300; }
 }
 

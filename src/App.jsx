@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import content from './content.js';
+import { useReducedMotion } from './hooks/useReducedMotion.js';
+import { PipelineCard } from './components/PipelineCard.jsx';
 
 const { site, about, experience, projects, skills, nav } = content;
 
@@ -153,15 +155,16 @@ function Header() {
 }
 
 function Hero() {
+  const reduced = useReducedMotion();
   return (
     <section id="top" className="relative overflow-hidden pt-32 sm:pt-40">
       <div className="grid-bg pointer-events-none absolute inset-0" aria-hidden="true" />
-      <div className="blob pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/30" aria-hidden="true" />
-      <div className="blob pointer-events-none absolute right-0 top-40 h-60 w-60 rounded-full bg-accent-500/20" style={{ animationDelay: '-6s' }} aria-hidden="true" />
+      <div className={`blob pointer-events-none absolute -top-24 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-brand-500/30${reduced ? ' !animate-none' : ''}`} aria-hidden="true" />
+      <div className={`blob pointer-events-none absolute right-0 top-40 h-60 w-60 rounded-full bg-accent-500/20${reduced ? ' !animate-none' : ''}`} style={{ animationDelay: '-6s' }} aria-hidden="true" />
       <div className="container-x relative pb-20 sm:pb-28">
         <p className="inline-flex items-center gap-2 rounded-full border border-brand-500/30 bg-brand-500/10 px-3 py-1 text-xs font-medium text-brand-700 dark:text-brand-300">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+            {!reduced && <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />}
             <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
           </span>
           {site.status}
@@ -170,7 +173,9 @@ function Hero() {
           {site.headline[0]}{' '}
           <span className="bg-gradient-to-r from-brand-500 via-brand-400 to-accent-400 bg-clip-text text-transparent">{site.headline[1]}</span>
         </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">{site.intro}</p>
+        <div className="mt-6 grid items-center gap-10 lg:grid-cols-[1.25fr_1fr]">
+        <div>
+        <p className="max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">{site.intro}</p>
         <div className="mt-10 flex flex-wrap gap-3">
           <a href="#projects" className="btn-primary">
             {site.primaryCta}
@@ -181,6 +186,11 @@ function Hero() {
           <a href={site.other.url} className="btn-ghost">
             {site.other.label} <ArrowIcon className="h-4 w-4" />
           </a>
+        </div>
+        </div>
+        <div className="hidden sm:block">
+          <PipelineCard />
+        </div>
         </div>
         <dl className="mt-16 grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
           {site.facts.map((f) => (
@@ -264,6 +274,8 @@ function Experience() {
 }
 
 function ProjectCard({ p }) {
+  const [open, setOpen] = useState(false);
+  const detailsId = `details-${p.title.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
   return (
     <article className="card group flex h-full flex-col p-6 hover:-translate-y-1 hover:border-brand-500/40 hover:shadow-xl hover:shadow-brand-500/10">
       <div className="flex items-start justify-between gap-3">
@@ -279,8 +291,8 @@ function ProjectCard({ p }) {
       <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-white">{p.title}</h3>
       {p.context && <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">{p.context}</p>}
       <p className="mt-3 text-slate-600 dark:text-slate-300">{p.summary}</p>
-      {p.points && (
-        <ul className="mt-4 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
+      {p.points && open && (
+        <ul id={detailsId} className="mt-4 space-y-1.5 text-sm text-slate-600 dark:text-slate-300">
           {p.points.map((x) => (
             <li key={x} className="flex gap-2">
               <span className="text-brand-500" aria-hidden="true">▹</span>
@@ -294,7 +306,18 @@ function ProjectCard({ p }) {
           <li key={s} className="chip">{s}</li>
         ))}
       </ul>
-      <div className="mt-auto flex gap-4 pt-6">
+      <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
+        {p.points && (
+          <button
+            type="button"
+            onClick={() => setOpen((o) => !o)}
+            aria-expanded={open}
+            aria-controls={detailsId}
+            className="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300"
+          >
+            {open ? 'Hide details ↑' : 'View details →'} <span className="sr-only">for {p.title}</span>
+          </button>
+        )}
         {p.repo && (
           <a href={p.repo} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">
             <GitHubIcon className="h-4 w-4" /> Source <span className="sr-only">for {p.title}</span>
@@ -328,7 +351,7 @@ function Projects() {
               aria-pressed={cat === c}
               className={`rounded-full px-4 py-2 text-sm font-medium transition ${
                 cat === c
-                  ? 'bg-brand-600 text-white shadow shadow-brand-600/30'
+                  ? 'bg-brand-700 text-white shadow shadow-brand-700/30'
                   : 'border border-slate-200 text-slate-600 hover:border-brand-500 dark:border-white/10 dark:text-slate-300'
               }`}
             >
@@ -405,7 +428,7 @@ export default function App() {
   useReveal();
   return (
     <>
-      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-600 focus:px-4 focus:py-2 focus:text-white">
+      <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-brand-700 focus:px-4 focus:py-2 focus:text-white">
         Skip to content
       </a>
       <Header />
